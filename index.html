@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>영어 학습 캘린더</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@300;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+  :root {
+    --bg: #f7f5f0;
+    --surface: #fff;
+    --border: #e8e4dc;
+    --text: #2a2520;
+    --text-muted: #8a8278;
+    --accent: #e8622a;
+    --vocab-color: #4a90d9;
+    --vocab-light: #eaf3fb;
+    --grammar-color: #9b6dce;
+    --grammar-light: #f3eefb;
+    --syntax-color: #2aab7a;
+    --syntax-light: #e8f8f2;
+    --rest-color: #aaa;
+    --rest-light: #f5f5f5;
+    --holiday-color: #e8622a;
+    --holiday-light: #fdf0ea;
+    --done-color: #2a2520;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 20px 14px 60px; }
+
+  /* 헤더 */
+  header { text-align: center; margin-bottom: 20px; }
+  header h1 { font-family: 'Gmarket Sans', sans-serif; font-size: 24px; font-weight: 700; }
+  header h1 span { color: var(--accent); }
+  header p { margin-top: 4px; font-size: 12px; color: var(--text-muted); }
+
+  /* 탭 네비 */
+  .top-nav { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+  .nav-btn { padding: 8px 20px; border: 2px solid var(--border); border-radius: 999px; font-size: 13px; font-weight: 700; font-family: 'Gmarket Sans', sans-serif; cursor: pointer; background: white; color: var(--text-muted); transition: all .15s; }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn.active { background: var(--text); border-color: var(--text); color: white; }
+
+  /* 진도 카드들 */
+  .progress-cards { display: flex; gap: 10px; max-width: 780px; margin: 0 auto 20px; flex-wrap: wrap; }
+  .progress-card { flex: 1; min-width: 160px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+  .progress-card .card-label { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; }
+  .progress-card .card-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .progress-card .card-count { font-family: 'Gmarket Sans', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+  .progress-card .card-count span { font-size: 12px; font-weight: 400; font-family: 'Noto Sans KR', sans-serif; color: var(--text-muted); }
+  .mini-bar-track { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; }
+  .mini-bar-fill { height: 100%; border-radius: 999px; transition: width .5s; }
+
+  /* 범례 */
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 780px; margin: 0 auto 16px; }
+  .legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-muted); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+  /* 연도 탭 */
+  .year-tabs { display: flex; gap: 8px; justify-content: center; max-width: 780px; margin: 0 auto 16px; }
+  .year-tab { padding: 7px 20px; border: 2px solid var(--border); border-radius: 999px; font-size: 13px; font-weight: 700; font-family: 'Gmarket Sans', sans-serif; cursor: pointer; background: white; color: var(--text-muted); transition: all .15s; }
+  .year-tab:hover { border-color: var(--accent); color: var(--accent); }
+  .year-tab.active { background: var(--text); border-color: var(--text); color: white; }
+
+  /* 캘린더 */
+  .months-container { display: flex; flex-direction: column; gap: 20px; max-width: 780px; margin: 0 auto; }
+  .month-block { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .month-title { font-family: 'Gmarket Sans', sans-serif; font-size: 14px; font-weight: 700; padding: 12px 18px; background: var(--text); color: white; }
+
+  .weekday-row { display: grid; grid-template-columns: repeat(7,1fr); border-bottom: 1px solid var(--border); }
+  .weekday-cell { text-align: center; font-size: 10px; font-weight: 700; padding: 6px 0; color: var(--text-muted); }
+  .weekday-cell.sun { color: #e05050; }
+  .weekday-cell.sat { color: #4a90d9; }
+
+  .days-grid { display: grid; grid-template-columns: repeat(7,1fr); }
+
+  .day-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-height: 80px; padding: 4px 5px; position: relative; cursor: pointer; transition: filter .15s; background: white; }
+  .day-cell:nth-child(7n) { border-right: none; }
+  .day-cell:hover { filter: brightness(.96); }
+  .day-cell.empty { background: var(--bg); cursor: default; }
+  .day-cell.empty:hover { filter: none; }
+  .day-cell.is-holiday-day { background: var(--holiday-light); }
+  .day-cell.is-rest-day { background: var(--rest-light); }
+
+  .day-num { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 3px; }
+  .day-cell.today .day-num { background: var(--accent); color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+
+  /* 과목 칩 */
+  .subject-chips { display: flex; flex-direction: column; gap: 2px; }
+  .subject-chip { display: flex; align-items: center; gap: 3px; padding: 2px 5px; border-radius: 4px; font-size: 9px; font-weight: 700; line-height: 1.3; }
+  .chip-vocab   { background: var(--vocab-light);   color: var(--vocab-color); }
+  .chip-grammar { background: var(--grammar-light); color: var(--grammar-color); }
+  .chip-syntax  { background: var(--syntax-light);  color: var(--syntax-color); }
+  .chip-done    { opacity: .5; text-decoration: line-through; }
+  .chip-check   { font-size: 8px; }
+
+  .holiday-label { font-size: 9px; color: var(--holiday-color); font-weight: 700; margin-top: 2px; }
+  .rest-label    { font-size: 9px; color: var(--rest-color);    font-weight: 700; margin-top: 2px; }
+  .modified-mark { position: absolute; bottom: 3px; right: 4px; font-size: 8px; color: var(--text-muted); }
+
+  /* ── 설정 화면 ── */
+  .settings-view { display: none; max-width: 600px; margin: 0 auto; }
+  .settings-view.active { display: block; }
+  .calendar-view { display: block; }
+  .calendar-view.hidden { display: none; }
+
+  .settings-section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+  .settings-section h3 { font-family: 'Gmarket Sans', sans-serif; font-size: 15px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .settings-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .settings-row label { font-size: 13px; color: var(--text-muted); min-width: 80px; }
+  .settings-row input { padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif; outline: none; width: 140px; }
+  .settings-row input:focus { border-color: var(--accent); }
+  .settings-row input[type=checkbox] { width: auto; }
+  .subject-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .subject-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .subject-toggle { display: flex; align-items: center; gap: 6px; font-size: 13px; margin-bottom: 10px; cursor: pointer; }
+  .save-btn { width: 100%; padding: 13px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; margin-top: 4px; }
+  .save-btn:hover { opacity: .9; }
+
+  /* ── 모달 ── */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: white; border-radius: 20px; padding: 22px; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,.2); max-height: 90vh; overflow-y: auto; }
+  .modal h3 { font-family: 'Gmarket Sans', sans-serif; font-size: 16px; margin-bottom: 4px; }
+  .modal-sub { font-size: 11px; color: var(--text-muted); margin-bottom: 14px; }
+
+  .modal-subject-block { border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+  .modal-subject-title { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .modal-subject-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+  .status-btns { display: flex; gap: 6px; margin-bottom: 8px; }
+  .status-btn { flex: 1; padding: 7px 4px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; background: white; color: var(--text-muted); font-family: 'Noto Sans KR', sans-serif; transition: all .12s; text-align: center; }
+  .status-btn:hover { border-color: var(--accent); }
+  .status-btn.sel-study   { background: var(--vocab-color);   color: white; border-color: transparent; }
+  .status-btn.sel-grammar-active { background: var(--grammar-color); color: white; border-color: transparent; }
+  .status-btn.sel-syntax-active  { background: var(--syntax-color);  color: white; border-color: transparent; }
+  .status-btn.sel-skip    { background: var(--rest-color);    color: white; border-color: transparent; }
+  .status-btn.sel-vocab   { background: var(--vocab-color);   color: white; border-color: transparent; }
+  .status-btn.selected    { background: var(--text);          color: white; border-color: transparent; }
+
+  .done-row { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 6px 2px; }
+  .done-row input { accent-color: var(--done-color); width: 15px; height: 15px; }
+
+  .modal-actions { display: flex; gap: 8px; margin-top: 14px; }
+  .btn { flex: 1; padding: 11px; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: opacity .15s; }
+  .btn:hover { opacity: .85; }
+  .btn-primary   { background: var(--accent); color: white; }
+  .btn-secondary { background: var(--border); color: var(--text); }
+
+  /* 시험 D-day 배너 */
+  .exam-banner {
+    display: flex; gap: 10px; max-width: 780px; margin: 0 auto 20px;
+    flex-wrap: wrap;
+  }
+  .exam-card {
+    flex: 1; min-width: 140px;
+    border-radius: 14px; padding: 14px 18px;
+    position: relative; overflow: hidden;
+  }
+  .exam-card.national { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+  .exam-card.local    { background: linear-gradient(135deg, #e8622a 0%, #c94f1f 100%); }
+  .exam-card-label {
+    font-size: 11px; font-weight: 700; color: rgba(255,255,255,.65);
+    letter-spacing: .5px; margin-bottom: 6px;
+  }
+  .exam-card-dday {
+    font-family: 'Gmarket Sans', sans-serif;
+    font-size: 28px; font-weight: 700; color: white; line-height: 1;
+    margin-bottom: 4px;
+  }
+  .exam-card-dday span { font-size: 14px; font-weight: 400; }
+  .exam-card-sub {
+    font-size: 11px; color: rgba(255,255,255,.7);
+  }
+  .exam-card-studyday {
+    position: absolute; top: 14px; right: 14px;
+    background: rgba(255,255,255,.15); border-radius: 8px;
+    padding: 4px 8px; font-size: 11px; font-weight: 700; color: white;
+    text-align: center; line-height: 1.4;
+  }
+
+  @media (max-width: 480px) {
+    .day-cell { min-height: 68px; }
+    .progress-card { min-width: 120px; }
+    .exam-card { min-width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>영어 학습 <span>캘린더</span></h1>
+  <p>단어 · 문법 · 구문 통합 관리</p>
+</header>
+
+<!-- 시험 D-day 배너 -->
+<div class="exam-banner" id="examBanner"></div>
+
+<div class="top-nav">
+  <button class="nav-btn active" onclick="showView('calendar')">📅 캘린더</button>
+  <button class="nav-btn" onclick="showView('settings')">⚙️ 설정</button>
+</div>
+
+<!-- 진도 카드 -->
+<div class="progress-cards" id="progressCards"></div>
+
+<!-- 범례 -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--vocab-color)"></div>단어</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--grammar-color)"></div>문법</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--syntax-color)"></div>구문</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--holiday-color)"></div>공휴일</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--rest-color)"></div>휴일</div>
+</div>
+
+<!-- 캘린더 뷰 -->
+<div class="calendar-view" id="calendarView">
+  <div class="year-tabs" id="yearTabs"></div>
+  <div class="months-container" id="monthsContainer"></div>
+</div>
+
+<!-- 설정 뷰 -->
+<div class="settings-view" id="settingsView">
+  <div class="settings-section">
+    <h3>📅 캘린더 기간</h3>
+    <div class="settings-row">
+      <label>시작 연월</label>
+      <input type="month" id="cfg-calStart">
+    </div>
+    <div class="settings-row">
+      <label>종료 연월</label>
+      <input type="month" id="cfg-calEnd">
+    </div>
+  </div>
+
+  <div class="settings-section" id="subject-settings"></div>
+
+  <button class="save-btn" onclick="saveSettings()">저장하고 적용</button>
+</div>
+
+<!-- 모달 -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle"></h3>
+    <div class="modal-sub" id="modalSub"></div>
+    <div id="modalSubjects"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary"   onclick="saveModal()">저장</button>
+      <button class="btn btn-secondary" onclick="closeModal()">취소</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── 시험 D-day 배너 ───────────────────────────────
+const EXAMS = [
+  { id: 'national', label: '국가직', date: '2027-04-05', cls: 'national' },
+  { id: 'local',    label: '지방직', date: '2027-06-19', cls: 'local'    },
+];
+const STUDY_START = '2026-06-07'; // 공부 시작일
+
+function renderExamBanner() {
+  const el = document.getElementById('examBanner');
+  el.innerHTML = '';
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const studyStart = parseDate(STUDY_START);
+
+  EXAMS.forEach(exam => {
+    const examDate = parseDate(exam.date);
+    const diffMs   = examDate - today;
+    const dday     = Math.ceil(diffMs / (1000*60*60*24));
+    const studyDay = Math.floor((today - studyStart) / (1000*60*60*24)) + 1;
+
+    const ddayText = dday > 0 ? `D-${dday}` : dday === 0 ? 'D-Day' : `D+${Math.abs(dday)}`;
+    const dateStr2 = `${exam.date.replace(/-/g,'.')} (${['일','월','화','수','목','금','토'][examDate.getDay()]})`;
+
+    el.innerHTML += `
+      <div class="exam-card ${exam.cls}">
+        <div class="exam-card-studyday">
+          📚 Study<br>Day ${studyDay > 0 ? studyDay : 1}
+        </div>
+        <div class="exam-card-label">${exam.label} 시험</div>
+        <div class="exam-card-dday">${ddayText}<span> 일</span></div>
+        <div class="exam-card-sub">${dateStr2}</div>
+      </div>`;
+  });
+}
+
+// ── 기본 설정 (localStorage에 없을 때) ──────────────
+const DEFAULT_CONFIG = {
+  calStart: '2026-06',
+  calEnd:   '2027-06',
+  subjects: [
+    {
+      id: 'vocab',
+      name: '단어',
+      color: '#4a90d9',
+      lightColor: '#eaf3fb',
+      enabled: true,
+      totalDays: 48,
+      startDate: '2026-06-07',
+      restDays: [5],      // 금요일
+    },
+    {
+      id: 'grammar',
+      name: '문법',
+      color: '#9b6dce',
+      lightColor: '#f3eefb',
+      enabled: false,
+      totalDays: 30,
+      startDate: '2026-08-05',
+      restDays: [5],
+    },
+    {
+      id: 'syntax',
+      name: '구문',
+      color: '#2aab7a',
+      lightColor: '#e8f8f2',
+      enabled: false,
+      totalDays: 30,
+      startDate: '2026-08-05',
+      restDays: [5],
+    },
+  ],
+};
+
+const HOLIDAYS = new Set([
+  '2026-06-06','2026-08-15','2026-09-24','2026-09-25','2026-09-26',
+  '2026-10-03','2026-10-09','2026-12-25',
+  '2027-01-01','2027-01-27','2027-01-28','2027-01-29',
+  '2027-03-01','2027-05-05','2027-05-13','2027-06-06',
+]);
+const HOLIDAY_NAMES = {
+  '2026-06-06':'현충일','2026-08-15':'광복절',
+  '2026-09-24':'추석','2026-09-25':'추석','2026-09-26':'추석',
+  '2026-10-03':'개천절','2026-10-09':'한글날','2026-12-25':'크리스마스',
+  '2027-01-01':'신정','2027-01-27':'설','2027-01-28':'설날','2027-01-29':'설',
+  '2027-03-01':'삼일절','2027-05-05':'어린이날','2027-05-13':'부처님오신날',
+  '2027-06-06':'현충일',
+};
+
+// ── 스토리지 ──────────────────────────────────────
+function loadConfig() {
+  const saved = localStorage.getItem('eng_cal_config');
+  return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+}
+function saveConfig(cfg) { localStorage.setItem('eng_cal_config', JSON.stringify(cfg)); }
+
+// overrides[subjectId][ds] = { skip: bool, done: bool }
+function loadOverrides() {
+  const saved = localStorage.getItem('eng_cal_overrides');
+  return saved ? JSON.parse(saved) : {};
+}
+function saveOverrides(ov) { localStorage.setItem('eng_cal_overrides', JSON.stringify(ov)); }
+
+let config = loadConfig();
+let overrides = loadOverrides();
+
+// ── 유틸 ─────────────────────────────────────────
+function dateStr(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function addDays(d,n) { const r=new Date(d); r.setDate(r.getDate()+n); return r; }
+function parseDate(s) { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function parseMonth(s) { const [y,m]=s.split('-').map(Number); return {y,m}; }
+
+// ── 과목별 스케줄 계산 ────────────────────────────
+// 반환: { [ds]: { dayNum, skip, done, modified } }
+function buildSubjectSchedule(subj) {
+  const ov = (overrides[subj.id] || {});
+  const map = {};
+  if (!subj.enabled) return map;
+
+  let dayNum = 1;
+  let cur = parseDate(subj.startDate);
+  const {y: ey, m: em} = parseMonth(config.calEnd);
+  const calEndDate = new Date(ey, em, 0);
+
+  while (cur <= calEndDate) {
+    const ds = dateStr(cur);
+    const dow = cur.getDay();
+    const userOv = ov[ds];
+
+    // 이 날 쉬는 날인지
+    const isHoliday = HOLIDAYS.has(ds);
+    const isRestDay = subj.restDays.includes(dow);
+    const isSkip = userOv ? userOv.skip : (isHoliday || isRestDay);
+
+    if (!isSkip && dayNum <= subj.totalDays) {
+      map[ds] = {
+        dayNum,
+        skip: false,
+        done: userOv ? !!userOv.done : false,
+        modified: !!userOv,
+      };
+      dayNum++;
+    } else if (isSkip) {
+      // 쉬는 날로 마킹 (날짜에 표시용)
+      map[ds] = { dayNum: null, skip: true, done: false, modified: !!userOv };
+    }
+    // dayNum > totalDays 이면 그냥 pass (48day 이후는 표시 안 함)
+
+    cur = addDays(cur, 1);
+  }
+  return map;
+}
+
+// 전체 스케줄 { subjectId: { ds: {...} } }
+function buildAllSchedules() {
+  const all = {};
+  config.subjects.forEach(s => { all[s.id] = buildSubjectSchedule(s); });
+  return all;
+}
+
+// ── 진도 카드 렌더링 ──────────────────────────────
+function renderProgressCards(allSchedules) {
+  const el = document.getElementById('progressCards');
+  el.innerHTML = '';
+  config.subjects.filter(s => s.enabled).forEach(s => {
+    const sched = allSchedules[s.id] || {};
+    const done  = Object.values(sched).filter(c => !c.skip && c.done).length;
+    const total = s.totalDays;
+    const pct   = Math.round(done / total * 100);
+
+    el.innerHTML += `
+      <div class="progress-card">
+        <div class="card-label">
+          <div class="card-dot" style="background:${s.color}"></div>${s.name}
+        </div>
+        <div class="card-count">${done}<span> / ${total} day</span></div>
+        <div class="mini-bar-track">
+          <div class="mini-bar-fill" style="width:${pct}%;background:${s.color}"></div>
+        </div>
+      </div>`;
+  });
+}
+
+// ── 캘린더 렌더링 ─────────────────────────────────
+let activeYear = new Date().getFullYear();
+
+function getMonthsByYear() {
+  const {y:sy, m:sm} = parseMonth(config.calStart);
+  const {y:ey, m:em} = parseMonth(config.calEnd);
+  const byYear = {};
+  let y=sy, m=sm;
+  while (y<ey || (y===ey && m<=em)) {
+    if (!byYear[y]) byYear[y]=[];
+    byYear[y].push(m);
+    m++; if(m>12){m=1;y++;}
+  }
+  return byYear;
+}
+
+function renderYearTabs(years) {
+  const el = document.getElementById('yearTabs');
+  el.innerHTML = '';
+  years.forEach(y => {
+    const btn = document.createElement('button');
+    btn.className = 'year-tab' + (y===activeYear?' active':'');
+    btn.textContent = y+'년';
+    btn.onclick = () => { activeYear=y; renderYearTabs(years); renderCalendar(); };
+    el.appendChild(btn);
+  });
+}
+
+function renderCalendar() {
+  const allSchedules = buildAllSchedules();
+  renderProgressCards(allSchedules);
+
+  const container = document.getElementById('monthsContainer');
+  container.innerHTML = '';
+  const today = dateStr(new Date());
+  const byYear = getMonthsByYear();
+  const months = byYear[activeYear] || [];
+
+  months.forEach(m => {
+    const y = activeYear;
+    const block = document.createElement('div');
+    block.className = 'month-block';
+
+    const titleEl = document.createElement('div');
+    titleEl.className = 'month-title';
+    titleEl.textContent = `${y}년 ${m}월`;
+    block.appendChild(titleEl);
+
+    const wRow = document.createElement('div');
+    wRow.className = 'weekday-row';
+    ['일','월','화','수','목','금','토'].forEach((d,i) => {
+      const c = document.createElement('div');
+      c.className = 'weekday-cell'+(i===0?' sun':i===6?' sat':'');
+      c.textContent = d; wRow.appendChild(c);
+    });
+    block.appendChild(wRow);
+
+    const grid = document.createElement('div');
+    grid.className = 'days-grid';
+
+    const firstDow = new Date(y,m-1,1).getDay();
+    for (let i=0;i<firstDow;i++) {
+      const e=document.createElement('div'); e.className='day-cell empty'; grid.appendChild(e);
+    }
+
+    const daysInMonth = new Date(y,m,0).getDate();
+    for (let d=1;d<=daysInMonth;d++) {
+      const ds = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const cell = document.createElement('div');
+      cell.className = 'day-cell';
+      if (ds===today) cell.classList.add('today');
+
+      // 공휴일/휴일 배경
+      if (HOLIDAYS.has(ds)) cell.classList.add('is-holiday-day');
+
+      // 날짜 숫자
+      const numEl = document.createElement('div');
+      numEl.className = 'day-num'; numEl.textContent = d; cell.appendChild(numEl);
+
+      // 공휴일 이름
+      if (HOLIDAYS.has(ds)) {
+        const hl = document.createElement('div');
+        hl.className = 'holiday-label'; hl.textContent = HOLIDAY_NAMES[ds]||'공휴일';
+        cell.appendChild(hl);
+      }
+
+      // 과목 칩들
+      const chips = document.createElement('div');
+      chips.className = 'subject-chips';
+      let hasAnySubject = false;
+
+      config.subjects.filter(s=>s.enabled).forEach(s => {
+        const info = allSchedules[s.id][ds];
+        if (!info || info.skip) return;
+        hasAnySubject = true;
+        const chip = document.createElement('div');
+        chip.className = `subject-chip chip-${s.id}${info.done?' chip-done':''}`;
+        chip.style.background = s.lightColor;
+        chip.style.color = s.color;
+        chip.innerHTML = `${info.done?'✓':''} ${s.name} ${info.dayNum}`;
+        chips.appendChild(chip);
+      });
+      cell.appendChild(chips);
+
+      // 수정 표시
+      const subjOvs = config.subjects.filter(s => overrides[s.id] && overrides[s.id][ds]);
+      if (subjOvs.length) {
+        const mod = document.createElement('div');
+        mod.className = 'modified-mark'; mod.textContent = '✎'; cell.appendChild(mod);
+      }
+
+      cell.addEventListener('click', () => openModal(ds, d, m, y, allSchedules));
+      grid.appendChild(cell);
+    }
+
+    block.appendChild(grid);
+    container.appendChild(block);
+  });
+}
+
+// ── 모달 ─────────────────────────────────────────
+let modalDs = null;
+let modalState = {}; // { subjectId: { skip, done } }
+
+function openModal(ds, d, m, y, allSchedules) {
+  modalDs = ds;
+  modalState = {};
+
+  document.getElementById('modalTitle').textContent = `${y}년 ${m}월 ${d}일`;
+  document.getElementById('modalSub').textContent = HOLIDAYS.has(ds) ? `🎌 ${HOLIDAY_NAMES[ds]||'공휴일'}` : '';
+
+  const container = document.getElementById('modalSubjects');
+  container.innerHTML = '';
+
+  config.subjects.filter(s=>s.enabled).forEach(s => {
+    const info = (allSchedules[s.id]||{})[ds];
+    const ov = (overrides[s.id]||{})[ds];
+
+    // 기본값
+    const isSkip = info ? info.skip : true;
+    const isDone = info ? info.done : false;
+    const dayNum = info && !info.skip ? info.dayNum : '–';
+
+    modalState[s.id] = { skip: isSkip, done: isDone };
+
+    const block = document.createElement('div');
+    block.className = 'modal-subject-block';
+    block.innerHTML = `
+      <div class="modal-subject-title">
+        <div class="modal-subject-dot" style="background:${s.color}"></div>
+        ${s.name} ${!isSkip ? `<span style="font-size:11px;color:var(--text-muted)">(${dayNum}day)</span>` : '<span style="font-size:11px;color:var(--text-muted)">(건너뜀)</span>'}
+      </div>
+      <div class="status-btns">
+        <button class="status-btn ${!isSkip?'selected':''}" 
+          onclick="setSubjSkip('${s.id}',false,this)" style="${!isSkip?`background:${s.color};color:white;border-color:transparent`:''}">
+          📚 학습
+        </button>
+        <button class="status-btn ${isSkip?'selected':''}"
+          onclick="setSubjSkip('${s.id}',true,this)" style="${isSkip?'background:var(--rest-color);color:white;border-color:transparent':''}">
+          🛋️ 건너뜀
+        </button>
+      </div>
+      <div class="done-row" id="done-row-${s.id}" style="display:${!isSkip?'flex':'none'}">
+        <input type="checkbox" id="done-${s.id}" ${isDone?'checked':''} onchange="setSubjDone('${s.id}',this.checked)">
+        <label for="done-${s.id}">✅ 완료</label>
+      </div>`;
+    container.appendChild(block);
+  });
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function setSubjSkip(subjId, skip, btn) {
+  modalState[subjId].skip = skip;
+  if (skip) modalState[subjId].done = false;
+  // 버튼 스타일 업데이트
+  const subj = config.subjects.find(s=>s.id===subjId);
+  const btns = btn.parentElement.querySelectorAll('.status-btn');
+  btns[0].className = 'status-btn'; btns[0].style = '';
+  btns[1].className = 'status-btn'; btns[1].style = '';
+  if (!skip) { btns[0].classList.add('selected'); btns[0].style=`background:${subj.color};color:white;border-color:transparent`; }
+  else        { btns[1].classList.add('selected'); btns[1].style='background:var(--rest-color);color:white;border-color:transparent'; }
+  document.getElementById(`done-row-${subjId}`).style.display = skip ? 'none' : 'flex';
+}
+
+function setSubjDone(subjId, done) {
+  modalState[subjId].done = done;
+}
+
+function saveModal() {
+  if (!modalDs) { closeModal(); return; }
+  config.subjects.filter(s=>s.enabled).forEach(s => {
+    const st = modalState[s.id];
+    if (!st) return;
+    if (!overrides[s.id]) overrides[s.id] = {};
+    overrides[s.id][modalDs] = { skip: st.skip, done: st.done };
+  });
+  saveOverrides(overrides);
+  renderCalendar();
+  closeModal();
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  modalDs = null; modalState = {};
+}
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target===document.getElementById('modalOverlay')) closeModal();
+});
+
+// ── 설정 화면 ─────────────────────────────────────
+function renderSettingsForm() {
+  document.getElementById('cfg-calStart').value = config.calStart;
+  document.getElementById('cfg-calEnd').value   = config.calEnd;
+
+  const el = document.getElementById('subject-settings');
+  el.innerHTML = '<h3>📚 과목 설정</h3>';
+
+  config.subjects.forEach((s,i) => {
+    el.innerHTML += `
+      <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:4px">
+        <div class="subject-header">
+          <div class="subject-dot" style="background:${s.color}"></div>
+          <strong>${s.name}</strong>
+        </div>
+        <label class="subject-toggle">
+          <input type="checkbox" id="s-enabled-${i}" ${s.enabled?'checked':''}> 활성화
+        </label>
+        <div class="settings-row">
+          <label>총 회차</label>
+          <input type="number" id="s-total-${i}" value="${s.totalDays}" min="1" max="200">
+        </div>
+        <div class="settings-row">
+          <label>시작일</label>
+          <input type="date" id="s-start-${i}" value="${s.startDate}">
+        </div>
+      </div>`;
+  });
+}
+
+function saveSettings() {
+  config.calStart = document.getElementById('cfg-calStart').value;
+  config.calEnd   = document.getElementById('cfg-calEnd').value;
+  config.subjects.forEach((s,i) => {
+    s.enabled   = document.getElementById(`s-enabled-${i}`).checked;
+    s.totalDays = parseInt(document.getElementById(`s-total-${i}`).value) || s.totalDays;
+    s.startDate = document.getElementById(`s-start-${i}`).value || s.startDate;
+  });
+  saveConfig(config);
+  showView('calendar');
+}
+
+// ── 뷰 전환 ──────────────────────────────────────
+function showView(v) {
+  document.querySelectorAll('.nav-btn').forEach((b,i) => {
+    b.classList.toggle('active', (v==='calendar'&&i===0)||(v==='settings'&&i===1));
+  });
+  document.getElementById('calendarView').classList.toggle('hidden', v!=='calendar');
+  document.getElementById('settingsView').classList.toggle('active', v==='settings');
+  document.getElementById('progressCards').style.display = v==='calendar'?'flex':'none';
+  document.querySelector('.legend').style.display = v==='calendar'?'flex':'none';
+  document.getElementById('yearTabs').style.display = v==='calendar'?'flex':'none';
+
+  if (v==='settings') renderSettingsForm();
+  if (v==='calendar') renderCalendar();
+}
+
+// ── 초기화 ───────────────────────────────────────
+renderExamBanner();
+const byYear = getMonthsByYear();
+const years = Object.keys(byYear).map(Number);
+if (!years.includes(activeYear)) activeYear = years[0];
+renderYearTabs(years);
+renderCalendar();
+</script>
+</body>
+</html>
