@@ -180,6 +180,14 @@
     text-align: center; line-height: 1.4;
   }
 
+
+  /* 날짜 타입 버튼 (다중 선택 토글) */
+  .day-type-btn { padding: 7px 10px; border: 2px solid var(--border); border-radius: 8px; font-size: 11px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; background: white; color: var(--text-muted); transition: all .12s; }
+  .day-type-btn:hover { border-color: var(--accent); }
+  .day-type-btn.on-study     { background: var(--vocab-color);   color: white; border-color: transparent; }
+  .day-type-btn.on-cumreview { background: var(--cumreview);     color: white; border-color: transparent; }
+  .day-type-btn.on-rest      { background: var(--rest-color);    color: white; border-color: transparent; }
+  .day-type-btn.on-holiday   { background: var(--holiday-color); color: white; border-color: transparent; }
   @media (max-width: 480px) {
     .day-cell { min-height: 68px; }
     .progress-card { min-width: 120px; }
@@ -244,6 +252,15 @@
   <div class="modal">
     <h3 id="modalTitle"></h3>
     <div class="modal-sub" id="modalSub"></div>
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:8px">날짜 태그 <span style="font-weight:400">(복수 선택 가능)</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="day-type-btn" id="dtype-study"     onclick="toggleDayType('study')">📚 학습일</button>
+        <button class="day-type-btn" id="dtype-cumreview" onclick="toggleDayType('cumreview')">📋 누적복습</button>
+        <button class="day-type-btn" id="dtype-rest"      onclick="toggleDayType('rest')">🛋️ 휴일</button>
+        <button class="day-type-btn" id="dtype-holiday"   onclick="toggleDayType('holiday')">🎌 공휴일</button>
+      </div>
+    </div>
     <div id="modalSubjects"></div>
     <div class="modal-actions">
       <button class="btn btn-primary"   onclick="saveModal()">저장</button>
@@ -355,8 +372,16 @@ function loadOverrides() {
 }
 function saveOverrides(ov) { localStorage.setItem('eng_cal_overrides', JSON.stringify(ov)); }
 
+// dayOverrides[ds] = { type: 'cumreview'|'rest'|'holiday' }
+function loadDayOverrides() {
+  const saved = localStorage.getItem('eng_cal_day_overrides');
+  return saved ? JSON.parse(saved) : {};
+}
+function saveDayOverrides() { localStorage.setItem('eng_cal_day_overrides', JSON.stringify(dayOverrides)); }
+
 let config = loadConfig();
 let overrides = loadOverrides();
+let dayOverrides = loadDayOverrides();
 
 // ── 유틸 ─────────────────────────────────────────
 function dateStr(d) {
@@ -509,8 +534,13 @@ function renderCalendar() {
       cell.className = 'day-cell';
       if (ds===today) cell.classList.add('today');
 
-      // 공휴일/휴일 배경
-      if (HOLIDAYS.has(ds)) cell.classList.add('is-holiday-day');
+      // dayOverrides 반영
+      const dayOv = dayOverrides[ds];
+      const dayTypes = dayOv ? (dayOv.types || []) : [];
+      if (dayTypes.includes('rest'))      cell.classList.add('is-rest-day');
+      if (dayTypes.includes('holiday'))   cell.classList.add('is-holiday-day');
+      if (dayTypes.includes('cumreview')) cell.classList.add('is-cumreview-day');
+      if (!dayOv && HOLIDAYS.has(ds))     cell.classList.add('is-holiday-day');
 
       // 날짜 숫자
       const numEl = document.createElement('div');
@@ -527,6 +557,24 @@ function renderCalendar() {
       const chips = document.createElement('div');
       chips.className = 'subject-chips';
       let hasAnySubject = false;
+
+      // dayTypes 라벨 (복수 표시 가능)
+      const extraLabels = { cumreview: { text: '📋 누적복습', color: 'var(--cumreview)' }, rest: { text: '🛋️ 휴일', color: 'var(--rest-color)' }, holiday: { text: '🎌 공휴일', color: 'var(--holiday-color)' } };
+      dayTypes.filter(t => t !== 'study').forEach(t => {
+        const info = extraLabels[t];
+        if (!info) return;
+        const lbl = document.createElement('div');
+        lbl.style.cssText = `font-size:10px;font-weight:700;margin-top:1px;color:${info.color}`;
+        lbl.textContent = info.text;
+        chips.appendChild(lbl);
+      });
+      // 학습일 아닌 경우(study 없고 다른 태그만) 과목 칩 건너뜀
+      if (dayTypes.length > 0 && !dayTypes.includes('study')) {
+        cell.appendChild(chips);
+        cell.addEventListener('click', () => openModal(ds, d, m, y, allSchedules));
+        grid.appendChild(cell);
+        continue;
+      }
 
       config.subjects.filter(s=>s.enabled).forEach(s => {
         const info = allSchedules[s.id][ds];
@@ -559,11 +607,39 @@ function renderCalendar() {
 
 // ── 모달 ─────────────────────────────────────────
 let modalDs = null;
-let modalState = {}; // { subjectId: { skip, done } }
+let modalState = {};
+let modalDayTypes = new Set(); // 다중 선택: 'study'|'cumreview'|'rest'|'holiday'
+
+function toggleDayType(type) {
+  if (modalDayTypes.has(type)) {
+    modalDayTypes.delete(type);
+  } else {
+    modalDayTypes.add(type);
+  }
+  refreshDayTypeBtns();
+  // 학습일 포함 여부에 따라 과목 블록 표시
+  document.getElementById('modalSubjects').style.display =
+    modalDayTypes.has('study') || modalDayTypes.size === 0 ? 'block' : 'none';
+}
+
+function refreshDayTypeBtns() {
+  ['study','cumreview','rest','holiday'].forEach(t => {
+    const btn = document.getElementById('dtype-'+t);
+    if (!btn) return;
+    btn.className = 'day-type-btn' + (modalDayTypes.has(t) ? ' on-'+t : '');
+  });
+}
 
 function openModal(ds, d, m, y, allSchedules) {
   modalDs = ds;
   modalState = {};
+
+  // 날짜 타입 초기값: dayOverrides 확인 (배열로 저장)
+  const existingTypes = (dayOverrides[ds] || {}).types || [];
+  modalDayTypes = new Set(existingTypes.length ? existingTypes : ['study']);
+  refreshDayTypeBtns();
+  document.getElementById('modalSubjects').style.display =
+    modalDayTypes.has('study') || modalDayTypes.size === 0 ? 'block' : 'none';
 
   document.getElementById('modalTitle').textContent = `${y}년 ${m}월 ${d}일`;
   document.getElementById('modalSub').textContent = HOLIDAYS.has(ds) ? `🎌 ${HOLIDAY_NAMES[ds]||'공휴일'}` : '';
@@ -628,12 +704,23 @@ function setSubjDone(subjId, done) {
 
 function saveModal() {
   if (!modalDs) { closeModal(); return; }
-  config.subjects.filter(s=>s.enabled).forEach(s => {
-    const st = modalState[s.id];
-    if (!st) return;
-    if (!overrides[s.id]) overrides[s.id] = {};
-    overrides[s.id][modalDs] = { skip: st.skip, done: st.done };
-  });
+  // 날짜 타입 저장 (배열)
+  const typesArr = [...modalDayTypes];
+  if (typesArr.length === 0 || (typesArr.length === 1 && typesArr[0] === 'study')) {
+    delete dayOverrides[modalDs];
+  } else {
+    dayOverrides[modalDs] = { types: typesArr };
+  }
+  saveDayOverrides();
+  // 과목별 저장 (학습일 포함 또는 타입 없을 때)
+  if (modalDayTypes.has('study') || modalDayTypes.size === 0) {
+    config.subjects.filter(s=>s.enabled).forEach(s => {
+      const st = modalState[s.id];
+      if (!st) return;
+      if (!overrides[s.id]) overrides[s.id] = {};
+      overrides[s.id][modalDs] = { skip: st.skip, done: st.done };
+    });
+  }
   saveOverrides(overrides);
   renderCalendar();
   closeModal();
