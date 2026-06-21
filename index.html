@@ -30,19 +30,16 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 20px 14px 60px; }
 
-  /* 헤더 */
   header { text-align: center; margin-bottom: 20px; }
   header h1 { font-family: 'Gmarket Sans', sans-serif; font-size: 24px; font-weight: 700; }
   header h1 span { color: var(--accent); }
   header p { margin-top: 4px; font-size: 12px; color: var(--text-muted); }
 
-  /* 탭 네비 */
   .top-nav { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
   .nav-btn { padding: 8px 20px; border: 2px solid var(--border); border-radius: 999px; font-size: 13px; font-weight: 700; font-family: 'Gmarket Sans', sans-serif; cursor: pointer; background: white; color: var(--text-muted); transition: all .15s; }
   .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
   .nav-btn.active { background: var(--text); border-color: var(--text); color: white; }
 
-  /* 진도 카드들 */
   .progress-cards { display: flex; gap: 10px; max-width: 780px; margin: 0 auto 20px; flex-wrap: wrap; }
   .progress-card { flex: 1; min-width: 160px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
   .progress-card .card-label { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; }
@@ -52,18 +49,15 @@
   .mini-bar-track { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; }
   .mini-bar-fill { height: 100%; border-radius: 999px; transition: width .5s; }
 
-  /* 범례 */
   .legend { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 780px; margin: 0 auto 16px; }
   .legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-muted); }
   .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
 
-  /* 연도 탭 */
   .year-tabs { display: flex; gap: 8px; justify-content: center; max-width: 780px; margin: 0 auto 16px; }
   .year-tab { padding: 7px 20px; border: 2px solid var(--border); border-radius: 999px; font-size: 13px; font-weight: 700; font-family: 'Gmarket Sans', sans-serif; cursor: pointer; background: white; color: var(--text-muted); transition: all .15s; }
   .year-tab:hover { border-color: var(--accent); color: var(--accent); }
   .year-tab.active { background: var(--text); border-color: var(--text); color: white; }
 
-  /* 캘린더 */
   .months-container { display: flex; flex-direction: column; gap: 20px; max-width: 780px; margin: 0 auto; }
   .month-block { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
   .month-title { font-family: 'Gmarket Sans', sans-serif; font-size: 14px; font-weight: 700; padding: 12px 18px; background: var(--text); color: white; }
@@ -86,7 +80,6 @@
   .day-num { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 3px; }
   .day-cell.today .day-num { background: var(--accent); color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; }
 
-  /* 과목 칩 */
   .subject-chips { display: flex; flex-direction: column; gap: 2px; }
   .subject-chip { display: flex; align-items: center; gap: 3px; padding: 2px 5px; border-radius: 4px; font-size: 9px; font-weight: 700; line-height: 1.3; }
   .chip-vocab   { background: var(--vocab-light);   color: var(--vocab-color); }
@@ -99,7 +92,6 @@
   .rest-label    { font-size: 9px; color: var(--rest-color);    font-weight: 700; margin-top: 2px; }
   .modified-mark { position: absolute; bottom: 3px; right: 4px; font-size: 8px; color: var(--text-muted); }
 
-  /* ── 설정 화면 ── */
   .settings-view { display: none; max-width: 600px; margin: 0 auto; }
   .settings-view.active { display: block; }
   .calendar-view { display: block; }
@@ -118,7 +110,6 @@
   .save-btn { width: 100%; padding: 13px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; margin-top: 4px; }
   .save-btn:hover { opacity: .9; }
 
-  /* ── 모달 ── */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
   .modal-overlay.open { display: flex; }
   .modal { background: white; border-radius: 20px; padding: 22px; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,.2); max-height: 90vh; overflow-y: auto; }
@@ -132,12 +123,15 @@
   .status-btns { display: flex; gap: 6px; margin-bottom: 8px; }
   .status-btn { flex: 1; padding: 7px 4px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; background: white; color: var(--text-muted); font-family: 'Noto Sans KR', sans-serif; transition: all .12s; text-align: center; }
   .status-btn:hover { border-color: var(--accent); }
-  .status-btn.sel-study   { background: var(--vocab-color);   color: white; border-color: transparent; }
-  .status-btn.sel-grammar-active { background: var(--grammar-color); color: white; border-color: transparent; }
-  .status-btn.sel-syntax-active  { background: var(--syntax-color);  color: white; border-color: transparent; }
-  .status-btn.sel-skip    { background: var(--rest-color);    color: white; border-color: transparent; }
-  .status-btn.sel-vocab   { background: var(--vocab-color);   color: white; border-color: transparent; }
-  .status-btn.selected    { background: var(--text);          color: white; border-color: transparent; }
+  .status-btn.selected { background: var(--text); color: white; border-color: transparent; }
+
+  /* 회차 수 선택 버튼 */
+  .sessions-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .sessions-label { font-size: 11px; color: var(--text-muted); min-width: 46px; }
+  .session-btns { display: flex; gap: 4px; }
+  .session-btn { padding: 5px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; background: white; color: var(--text-muted); font-family: 'Noto Sans KR', sans-serif; transition: all .12s; }
+  .session-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .session-btn.active { color: white; border-color: transparent; }
 
   .done-row { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 6px 2px; }
   .done-row input { accent-color: var(--done-color); width: 15px; height: 15px; }
@@ -148,7 +142,6 @@
   .btn-primary   { background: var(--accent); color: white; }
   .btn-secondary { background: var(--border); color: var(--text); }
 
-  /* 시험 D-day 배너 */
   .exam-banner {
     display: flex; gap: 10px; max-width: 780px; margin: 0 auto 20px;
     flex-wrap: wrap;
@@ -180,8 +173,6 @@
     text-align: center; line-height: 1.4;
   }
 
-
-  /* 날짜 타입 버튼 (다중 선택 토글) */
   .day-type-btn { padding: 7px 10px; border: 2px solid var(--border); border-radius: 8px; font-size: 11px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; background: white; color: var(--text-muted); transition: all .12s; }
   .day-type-btn:hover { border-color: var(--accent); }
   .day-type-btn.on-study     { background: var(--vocab-color);   color: white; border-color: transparent; }
@@ -202,7 +193,6 @@
   <p>단어 · 문법 · 구문 통합 관리</p>
 </header>
 
-<!-- 시험 D-day 배너 -->
 <div class="exam-banner" id="examBanner"></div>
 
 <div class="top-nav">
@@ -210,10 +200,8 @@
   <button class="nav-btn" onclick="showView('settings')">⚙️ 설정</button>
 </div>
 
-<!-- 진도 카드 -->
 <div class="progress-cards" id="progressCards"></div>
 
-<!-- 범례 -->
 <div class="legend">
   <div class="legend-item"><div class="legend-dot" style="background:var(--vocab-color)"></div>단어</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--grammar-color)"></div>문법</div>
@@ -222,13 +210,11 @@
   <div class="legend-item"><div class="legend-dot" style="background:var(--rest-color)"></div>휴일</div>
 </div>
 
-<!-- 캘린더 뷰 -->
 <div class="calendar-view" id="calendarView">
   <div class="year-tabs" id="yearTabs"></div>
   <div class="months-container" id="monthsContainer"></div>
 </div>
 
-<!-- 설정 뷰 -->
 <div class="settings-view" id="settingsView">
   <div class="settings-section">
     <h3>📅 캘린더 기간</h3>
@@ -247,7 +233,6 @@
   <button class="save-btn" onclick="saveSettings()">저장하고 적용</button>
 </div>
 
-<!-- 모달 -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <h3 id="modalTitle"></h3>
@@ -270,12 +255,11 @@
 </div>
 
 <script>
-// ── 시험 D-day 배너 ───────────────────────────────
 const EXAMS = [
   { id: 'national', label: '국가직', date: '2027-04-05', cls: 'national' },
   { id: 'local',    label: '지방직', date: '2027-06-19', cls: 'local'    },
 ];
-const STUDY_START = '2026-06-07'; // 공부 시작일
+const STUDY_START = '2026-06-07';
 
 function renderExamBanner() {
   const el = document.getElementById('examBanner');
@@ -305,7 +289,6 @@ function renderExamBanner() {
   });
 }
 
-// ── 기본 설정 (localStorage에 없을 때) ──────────────
 const DEFAULT_CONFIG = {
   calStart: '2026-06',
   calEnd:   '2027-06',
@@ -318,7 +301,7 @@ const DEFAULT_CONFIG = {
       enabled: true,
       totalDays: 48,
       startDate: '2026-06-07',
-      restDays: [5],      // 금요일
+      restDays: [5],
     },
     {
       id: 'grammar',
@@ -358,21 +341,18 @@ const HOLIDAY_NAMES = {
   '2027-06-06':'현충일',
 };
 
-// ── 스토리지 ──────────────────────────────────────
 function loadConfig() {
   const saved = localStorage.getItem('eng_cal_config');
   return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 }
 function saveConfig(cfg) { localStorage.setItem('eng_cal_config', JSON.stringify(cfg)); }
 
-// overrides[subjectId][ds] = { skip: bool, done: bool }
 function loadOverrides() {
   const saved = localStorage.getItem('eng_cal_overrides');
   return saved ? JSON.parse(saved) : {};
 }
 function saveOverrides(ov) { localStorage.setItem('eng_cal_overrides', JSON.stringify(ov)); }
 
-// dayOverrides[ds] = { type: 'cumreview'|'rest'|'holiday' }
 function loadDayOverrides() {
   const saved = localStorage.getItem('eng_cal_day_overrides');
   return saved ? JSON.parse(saved) : {};
@@ -383,7 +363,6 @@ let config = loadConfig();
 let overrides = loadOverrides();
 let dayOverrides = loadDayOverrides();
 
-// ── 유틸 ─────────────────────────────────────────
 function dateStr(d) {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
@@ -391,8 +370,7 @@ function addDays(d,n) { const r=new Date(d); r.setDate(r.getDate()+n); return r;
 function parseDate(s) { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
 function parseMonth(s) { const [y,m]=s.split('-').map(Number); return {y,m}; }
 
-// ── 과목별 스케줄 계산 ────────────────────────────
-// 반환: { [ds]: { dayNum, skip, done, modified } }
+// 날짜별 dayNums 배열을 반환 (여러 회차 지원)
 function buildSubjectSchedule(subj) {
   const ov = (overrides[subj.id] || {});
   const map = {};
@@ -408,44 +386,50 @@ function buildSubjectSchedule(subj) {
     const dow = cur.getDay();
     const userOv = ov[ds];
 
-    // 이 날 쉬는 날인지
     const isHoliday = HOLIDAYS.has(ds);
     const isRestDay = subj.restDays.includes(dow);
     const isSkip = userOv ? userOv.skip : (isHoliday || isRestDay);
 
+    // 해당 날짜의 회차 수 (기본 1)
+    const sessions = (!isSkip && userOv && userOv.sessions) ? userOv.sessions : 1;
+
     if (!isSkip && dayNum <= subj.totalDays) {
+      const dayNums = [];
+      for (let i = 0; i < sessions && dayNum + i <= subj.totalDays; i++) {
+        dayNums.push(dayNum + i);
+      }
       map[ds] = {
-        dayNum,
+        dayNums,
+        dayNum: dayNums[0],
         skip: false,
         done: userOv ? !!userOv.done : false,
         modified: !!userOv,
       };
-      dayNum++;
+      dayNum += dayNums.length;
     } else if (isSkip) {
-      // 쉬는 날로 마킹 (날짜에 표시용)
-      map[ds] = { dayNum: null, skip: true, done: false, modified: !!userOv };
+      map[ds] = { dayNums: [], dayNum: null, skip: true, done: false, modified: !!userOv };
     }
-    // dayNum > totalDays 이면 그냥 pass (48day 이후는 표시 안 함)
 
     cur = addDays(cur, 1);
   }
   return map;
 }
 
-// 전체 스케줄 { subjectId: { ds: {...} } }
 function buildAllSchedules() {
   const all = {};
   config.subjects.forEach(s => { all[s.id] = buildSubjectSchedule(s); });
   return all;
 }
 
-// ── 진도 카드 렌더링 ──────────────────────────────
 function renderProgressCards(allSchedules) {
   const el = document.getElementById('progressCards');
   el.innerHTML = '';
   config.subjects.filter(s => s.enabled).forEach(s => {
     const sched = allSchedules[s.id] || {};
-    const done  = Object.values(sched).filter(c => !c.skip && c.done).length;
+    // 완료된 회차 수 합산 (여러 회차 지원)
+    const done = Object.values(sched)
+      .filter(c => !c.skip && c.done)
+      .reduce((acc, c) => acc + (c.dayNums ? c.dayNums.length : 1), 0);
     const total = s.totalDays;
     const pct   = Math.round(done / total * 100);
 
@@ -462,7 +446,6 @@ function renderProgressCards(allSchedules) {
   });
 }
 
-// ── 캘린더 렌더링 ─────────────────────────────────
 let activeYear = new Date().getFullYear();
 
 function getMonthsByYear() {
@@ -534,7 +517,6 @@ function renderCalendar() {
       cell.className = 'day-cell';
       if (ds===today) cell.classList.add('today');
 
-      // dayOverrides 반영
       const dayOv = dayOverrides[ds];
       const dayTypes = dayOv ? (dayOv.types || []) : [];
       if (dayTypes.includes('rest'))      cell.classList.add('is-rest-day');
@@ -542,23 +524,18 @@ function renderCalendar() {
       if (dayTypes.includes('cumreview')) cell.classList.add('is-cumreview-day');
       if (!dayOv && HOLIDAYS.has(ds))     cell.classList.add('is-holiday-day');
 
-      // 날짜 숫자
       const numEl = document.createElement('div');
       numEl.className = 'day-num'; numEl.textContent = d; cell.appendChild(numEl);
 
-      // 공휴일 이름
       if (HOLIDAYS.has(ds)) {
         const hl = document.createElement('div');
         hl.className = 'holiday-label'; hl.textContent = HOLIDAY_NAMES[ds]||'공휴일';
         cell.appendChild(hl);
       }
 
-      // 과목 칩들
       const chips = document.createElement('div');
       chips.className = 'subject-chips';
-      let hasAnySubject = false;
 
-      // dayTypes 라벨 (복수 표시 가능)
       const extraLabels = { cumreview: { text: '📋 누적복습', color: 'var(--cumreview)' }, rest: { text: '🛋️ 휴일', color: 'var(--rest-color)' }, holiday: { text: '🎌 공휴일', color: 'var(--holiday-color)' } };
       dayTypes.filter(t => t !== 'study').forEach(t => {
         const info = extraLabels[t];
@@ -568,7 +545,6 @@ function renderCalendar() {
         lbl.textContent = info.text;
         chips.appendChild(lbl);
       });
-      // 학습일 아닌 경우(study 없고 다른 태그만) 과목 칩 건너뜀
       if (dayTypes.length > 0 && !dayTypes.includes('study')) {
         cell.appendChild(chips);
         cell.addEventListener('click', () => openModal(ds, d, m, y, allSchedules));
@@ -579,17 +555,20 @@ function renderCalendar() {
       config.subjects.filter(s=>s.enabled).forEach(s => {
         const info = allSchedules[s.id][ds];
         if (!info || info.skip) return;
-        hasAnySubject = true;
         const chip = document.createElement('div');
         chip.className = `subject-chip chip-${s.id}${info.done?' chip-done':''}`;
         chip.style.background = s.lightColor;
         chip.style.color = s.color;
-        chip.innerHTML = `${info.done?'✓':''} ${s.name} ${info.dayNum}`;
+        // 여러 회차인 경우 범위 표시 (예: 단어 5-6)
+        const dayNums = info.dayNums || [info.dayNum];
+        const dayNumText = dayNums.length > 1
+          ? `${dayNums[0]}-${dayNums[dayNums.length - 1]}`
+          : dayNums[0];
+        chip.innerHTML = `${info.done?'✓':''} ${s.name} ${dayNumText}`;
         chips.appendChild(chip);
       });
       cell.appendChild(chips);
 
-      // 수정 표시
       const subjOvs = config.subjects.filter(s => overrides[s.id] && overrides[s.id][ds]);
       if (subjOvs.length) {
         const mod = document.createElement('div');
@@ -605,10 +584,10 @@ function renderCalendar() {
   });
 }
 
-// ── 모달 ─────────────────────────────────────────
 let modalDs = null;
 let modalState = {};
-let modalDayTypes = new Set(); // 다중 선택: 'study'|'cumreview'|'rest'|'holiday'
+let modalDayTypes = new Set();
+let modalCurrentSchedule = {};  // 현재 열린 날짜의 스케줄 정보
 
 function toggleDayType(type) {
   if (modalDayTypes.has(type)) {
@@ -617,7 +596,6 @@ function toggleDayType(type) {
     modalDayTypes.add(type);
   }
   refreshDayTypeBtns();
-  // 학습일 포함 여부에 따라 과목 블록 표시
   document.getElementById('modalSubjects').style.display =
     modalDayTypes.has('study') || modalDayTypes.size === 0 ? 'block' : 'none';
 }
@@ -630,11 +608,43 @@ function refreshDayTypeBtns() {
   });
 }
 
+// 회차 수 변경 핸들러
+function setSessions(subjId, n) {
+  modalState[subjId].sessions = n;
+  const subj = config.subjects.find(s => s.id === subjId);
+  const info = modalCurrentSchedule[subjId];
+
+  // 회차 미리보기 텍스트 업데이트
+  let previewText;
+  if (!info || info.skip || modalState[subjId].skip) {
+    previewText = '건너뜀';
+  } else {
+    const first = info.dayNums && info.dayNums.length > 0 ? info.dayNums[0] : info.dayNum;
+    if (first == null) {
+      previewText = '–';
+    } else {
+      const last = Math.min(first + n - 1, subj.totalDays);
+      previewText = n > 1 ? `${first}-${last}day` : `${first}day`;
+    }
+  }
+  const previewEl = document.getElementById(`day-preview-${subjId}`);
+  if (previewEl) previewEl.textContent = `(${previewText})`;
+
+  // 버튼 스타일 업데이트
+  [1, 2, 3].forEach(num => {
+    const btn = document.getElementById(`session-btn-${subjId}-${num}`);
+    if (!btn) return;
+    const isActive = num === n;
+    btn.className = 'session-btn' + (isActive ? ' active' : '');
+    btn.style = isActive ? `background:${subj.color};color:white;border-color:transparent` : '';
+  });
+}
+
 function openModal(ds, d, m, y, allSchedules) {
   modalDs = ds;
   modalState = {};
+  modalCurrentSchedule = {};
 
-  // 날짜 타입 초기값: dayOverrides 확인 (배열로 저장)
   const existingTypes = (dayOverrides[ds] || {}).types || [];
   modalDayTypes = new Set(existingTypes.length ? existingTypes : ['study']);
   refreshDayTypeBtns();
@@ -651,29 +661,56 @@ function openModal(ds, d, m, y, allSchedules) {
     const info = (allSchedules[s.id]||{})[ds];
     const ov = (overrides[s.id]||{})[ds];
 
-    // 기본값
+    modalCurrentSchedule[s.id] = info;
+
     const isSkip = info ? info.skip : true;
     const isDone = info ? info.done : false;
-    const dayNum = info && !info.skip ? info.dayNum : '–';
+    const dayNums = info && !info.skip ? (info.dayNums || [info.dayNum]) : [];
+    const sessions = dayNums.length > 0 ? dayNums.length : (ov && ov.sessions ? ov.sessions : 1);
 
-    modalState[s.id] = { skip: isSkip, done: isDone };
+    modalState[s.id] = { skip: isSkip, done: isDone, sessions };
+
+    // 회차 미리보기 텍스트
+    let dayPreviewText;
+    if (isSkip) {
+      dayPreviewText = '건너뜀';
+    } else if (dayNums.length > 1) {
+      dayPreviewText = `${dayNums[0]}-${dayNums[dayNums.length-1]}day`;
+    } else if (dayNums.length === 1) {
+      dayPreviewText = `${dayNums[0]}day`;
+    } else {
+      dayPreviewText = '–';
+    }
+
+    // 각 회차 버튼 스타일
+    const sessionBtns = [1, 2, 3].map(n => {
+      const isActive = n === sessions;
+      const style = isActive ? `background:${s.color};color:white;border-color:transparent` : '';
+      return `<button class="session-btn${isActive?' active':''}" id="session-btn-${s.id}-${n}" onclick="setSessions('${s.id}',${n})" style="${style}">${n}회차</button>`;
+    }).join('');
 
     const block = document.createElement('div');
     block.className = 'modal-subject-block';
     block.innerHTML = `
-      <div class="modal-subject-title">
+      <div class="modal-subject-title" id="subject-title-${s.id}">
         <div class="modal-subject-dot" style="background:${s.color}"></div>
-        ${s.name} ${!isSkip ? `<span style="font-size:11px;color:var(--text-muted)">(${dayNum}day)</span>` : '<span style="font-size:11px;color:var(--text-muted)">(건너뜀)</span>'}
+        ${s.name} <span id="day-preview-${s.id}" style="font-size:11px;color:var(--text-muted);font-weight:400">(${dayPreviewText})</span>
       </div>
       <div class="status-btns">
-        <button class="status-btn ${!isSkip?'selected':''}" 
-          onclick="setSubjSkip('${s.id}',false,this)" style="${!isSkip?`background:${s.color};color:white;border-color:transparent`:''}">
+        <button class="status-btn ${!isSkip?'selected':''}"
+          onclick="setSubjSkip('${s.id}',false,this)"
+          style="${!isSkip?`background:${s.color};color:white;border-color:transparent`:''}">
           📚 학습
         </button>
         <button class="status-btn ${isSkip?'selected':''}"
-          onclick="setSubjSkip('${s.id}',true,this)" style="${isSkip?'background:var(--rest-color);color:white;border-color:transparent':''}">
+          onclick="setSubjSkip('${s.id}',true,this)"
+          style="${isSkip?'background:var(--rest-color);color:white;border-color:transparent':''}">
           🛋️ 건너뜀
         </button>
+      </div>
+      <div class="sessions-row" id="sessions-row-${s.id}" style="display:${!isSkip?'flex':'none'}">
+        <span class="sessions-label">회차 수</span>
+        <div class="session-btns">${sessionBtns}</div>
       </div>
       <div class="done-row" id="done-row-${s.id}" style="display:${!isSkip?'flex':'none'}">
         <input type="checkbox" id="done-${s.id}" ${isDone?'checked':''} onchange="setSubjDone('${s.id}',this.checked)">
@@ -688,7 +725,6 @@ function openModal(ds, d, m, y, allSchedules) {
 function setSubjSkip(subjId, skip, btn) {
   modalState[subjId].skip = skip;
   if (skip) modalState[subjId].done = false;
-  // 버튼 스타일 업데이트
   const subj = config.subjects.find(s=>s.id===subjId);
   const btns = btn.parentElement.querySelectorAll('.status-btn');
   btns[0].className = 'status-btn'; btns[0].style = '';
@@ -696,6 +732,18 @@ function setSubjSkip(subjId, skip, btn) {
   if (!skip) { btns[0].classList.add('selected'); btns[0].style=`background:${subj.color};color:white;border-color:transparent`; }
   else        { btns[1].classList.add('selected'); btns[1].style='background:var(--rest-color);color:white;border-color:transparent'; }
   document.getElementById(`done-row-${subjId}`).style.display = skip ? 'none' : 'flex';
+  document.getElementById(`sessions-row-${subjId}`).style.display = skip ? 'none' : 'flex';
+
+  // 건너뜀으로 바꾸면 미리보기도 업데이트
+  const previewEl = document.getElementById(`day-preview-${subjId}`);
+  if (previewEl) {
+    if (skip) {
+      previewEl.textContent = '(건너뜀)';
+    } else {
+      // 현재 sessions 기준으로 다시 계산
+      setSessions(subjId, modalState[subjId].sessions || 1);
+    }
+  }
 }
 
 function setSubjDone(subjId, done) {
@@ -704,7 +752,6 @@ function setSubjDone(subjId, done) {
 
 function saveModal() {
   if (!modalDs) { closeModal(); return; }
-  // 날짜 타입 저장 (배열)
   const typesArr = [...modalDayTypes];
   if (typesArr.length === 0 || (typesArr.length === 1 && typesArr[0] === 'study')) {
     delete dayOverrides[modalDs];
@@ -712,13 +759,16 @@ function saveModal() {
     dayOverrides[modalDs] = { types: typesArr };
   }
   saveDayOverrides();
-  // 과목별 저장 (학습일 포함 또는 타입 없을 때)
   if (modalDayTypes.has('study') || modalDayTypes.size === 0) {
     config.subjects.filter(s=>s.enabled).forEach(s => {
       const st = modalState[s.id];
       if (!st) return;
       if (!overrides[s.id]) overrides[s.id] = {};
-      overrides[s.id][modalDs] = { skip: st.skip, done: st.done };
+      overrides[s.id][modalDs] = {
+        skip: st.skip,
+        done: st.done,
+        sessions: st.skip ? 1 : (st.sessions || 1),
+      };
     });
   }
   saveOverrides(overrides);
@@ -728,13 +778,12 @@ function saveModal() {
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('open');
-  modalDs = null; modalState = {};
+  modalDs = null; modalState = {}; modalCurrentSchedule = {};
 }
 document.getElementById('modalOverlay').addEventListener('click', e => {
   if (e.target===document.getElementById('modalOverlay')) closeModal();
 });
 
-// ── 설정 화면 ─────────────────────────────────────
 function renderSettingsForm() {
   document.getElementById('cfg-calStart').value = config.calStart;
   document.getElementById('cfg-calEnd').value   = config.calEnd;
@@ -776,7 +825,6 @@ function saveSettings() {
   showView('calendar');
 }
 
-// ── 뷰 전환 ──────────────────────────────────────
 function showView(v) {
   document.querySelectorAll('.nav-btn').forEach((b,i) => {
     b.classList.toggle('active', (v==='calendar'&&i===0)||(v==='settings'&&i===1));
@@ -791,7 +839,6 @@ function showView(v) {
   if (v==='calendar') renderCalendar();
 }
 
-// ── 초기화 ───────────────────────────────────────
 renderExamBanner();
 const byYear = getMonthsByYear();
 const years = Object.keys(byYear).map(Number);
