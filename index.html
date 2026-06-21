@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>영어 학습 캘린더</title>
+<title>학습 캘린더</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@300;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
@@ -14,12 +14,6 @@
     --text: #2a2520;
     --text-muted: #8a8278;
     --accent: #e8622a;
-    --vocab-color: #4a90d9;
-    --vocab-light: #eaf3fb;
-    --grammar-color: #9b6dce;
-    --grammar-light: #f3eefb;
-    --syntax-color: #2aab7a;
-    --syntax-light: #e8f8f2;
     --rest-color: #aaa;
     --rest-light: #f5f5f5;
     --holiday-color: #e8622a;
@@ -41,7 +35,7 @@
   .nav-btn.active { background: var(--text); border-color: var(--text); color: white; }
 
   .progress-cards { display: flex; gap: 10px; max-width: 780px; margin: 0 auto 20px; flex-wrap: wrap; }
-  .progress-card { flex: 1; min-width: 160px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+  .progress-card { flex: 1; min-width: 140px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
   .progress-card .card-label { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; }
   .progress-card .card-dot { width: 8px; height: 8px; border-radius: 50%; }
   .progress-card .card-count { font-family: 'Gmarket Sans', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 6px; }
@@ -82,11 +76,7 @@
 
   .subject-chips { display: flex; flex-direction: column; gap: 2px; }
   .subject-chip { display: flex; align-items: center; gap: 3px; padding: 2px 5px; border-radius: 4px; font-size: 9px; font-weight: 700; line-height: 1.3; }
-  .chip-vocab   { background: var(--vocab-light);   color: var(--vocab-color); }
-  .chip-grammar { background: var(--grammar-light); color: var(--grammar-color); }
-  .chip-syntax  { background: var(--syntax-light);  color: var(--syntax-color); }
-  .chip-done    { opacity: .5; text-decoration: line-through; }
-  .chip-check   { font-size: 8px; }
+  .chip-done { opacity: .5; text-decoration: line-through; }
 
   .holiday-label { font-size: 9px; color: var(--holiday-color); font-weight: 700; margin-top: 2px; }
   .rest-label    { font-size: 9px; color: var(--rest-color);    font-weight: 700; margin-top: 2px; }
@@ -101,14 +91,34 @@
   .settings-section h3 { font-family: 'Gmarket Sans', sans-serif; font-size: 15px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
   .settings-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
   .settings-row label { font-size: 13px; color: var(--text-muted); min-width: 80px; }
-  .settings-row input { padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif; outline: none; width: 140px; }
+  .settings-row input[type=month],
+  .settings-row input[type=date],
+  .settings-row input[type=number],
+  .settings-row input[type=text] { padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif; outline: none; width: 140px; }
   .settings-row input:focus { border-color: var(--accent); }
   .settings-row input[type=checkbox] { width: auto; }
+  .settings-row input[type=color] { width: 40px; height: 36px; padding: 2px; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; }
   .subject-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .subject-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
   .subject-toggle { display: flex; align-items: center; gap: 6px; font-size: 13px; margin-bottom: 10px; cursor: pointer; }
   .save-btn { width: 100%; padding: 13px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; margin-top: 4px; }
   .save-btn:hover { opacity: .9; }
+
+  /* 과목 카드 (설정) */
+  .subject-card { border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+  .subject-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .subject-card-header input[type=color] { width: 34px; height: 34px; padding: 2px; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; flex-shrink: 0; }
+  .subject-card-header input[type=text] { flex: 1; padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; outline: none; }
+  .subject-card-header input[type=text]:focus { border-color: var(--accent); }
+  .subject-card-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .subject-card-row label { font-size: 12px; color: var(--text-muted); min-width: 60px; }
+  .subject-card-row input[type=number],
+  .subject-card-row input[type=date] { padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif; outline: none; width: 130px; }
+  .subject-card-row input:focus { border-color: var(--accent); }
+  .btn-delete { padding: 6px 12px; border: 1.5px solid #ffcccc; border-radius: 8px; font-size: 11px; font-weight: 700; color: #e05050; background: #fff5f5; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; }
+  .btn-delete:hover { background: #ffe0e0; }
+  .btn-add-subject { width: 100%; padding: 11px; border: 2px dashed var(--border); border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--text-muted); background: white; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; margin-top: 4px; transition: all .15s; }
+  .btn-add-subject:hover { border-color: var(--accent); color: var(--accent); }
 
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
   .modal-overlay.open { display: flex; }
@@ -125,7 +135,6 @@
   .status-btn:hover { border-color: var(--accent); }
   .status-btn.selected { background: var(--text); color: white; border-color: transparent; }
 
-  /* 회차 수 선택 버튼 */
   .sessions-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
   .sessions-label { font-size: 11px; color: var(--text-muted); min-width: 46px; }
   .session-btns { display: flex; gap: 4px; }
@@ -142,43 +151,23 @@
   .btn-primary   { background: var(--accent); color: white; }
   .btn-secondary { background: var(--border); color: var(--text); }
 
-  .exam-banner {
-    display: flex; gap: 10px; max-width: 780px; margin: 0 auto 20px;
-    flex-wrap: wrap;
-  }
-  .exam-card {
-    flex: 1; min-width: 140px;
-    border-radius: 14px; padding: 14px 18px;
-    position: relative; overflow: hidden;
-  }
+  .exam-banner { display: flex; gap: 10px; max-width: 780px; margin: 0 auto 20px; flex-wrap: wrap; }
+  .exam-card { flex: 1; min-width: 140px; border-radius: 14px; padding: 14px 18px; position: relative; overflow: hidden; }
   .exam-card.national { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
   .exam-card.local    { background: linear-gradient(135deg, #e8622a 0%, #c94f1f 100%); }
-  .exam-card-label {
-    font-size: 11px; font-weight: 700; color: rgba(255,255,255,.65);
-    letter-spacing: .5px; margin-bottom: 6px;
-  }
-  .exam-card-dday {
-    font-family: 'Gmarket Sans', sans-serif;
-    font-size: 28px; font-weight: 700; color: white; line-height: 1;
-    margin-bottom: 4px;
-  }
+  .exam-card-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.65); letter-spacing: .5px; margin-bottom: 6px; }
+  .exam-card-dday { font-family: 'Gmarket Sans', sans-serif; font-size: 28px; font-weight: 700; color: white; line-height: 1; margin-bottom: 4px; }
   .exam-card-dday span { font-size: 14px; font-weight: 400; }
-  .exam-card-sub {
-    font-size: 11px; color: rgba(255,255,255,.7);
-  }
-  .exam-card-studyday {
-    position: absolute; top: 14px; right: 14px;
-    background: rgba(255,255,255,.15); border-radius: 8px;
-    padding: 4px 8px; font-size: 11px; font-weight: 700; color: white;
-    text-align: center; line-height: 1.4;
-  }
+  .exam-card-sub { font-size: 11px; color: rgba(255,255,255,.7); }
+  .exam-card-studyday { position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,.15); border-radius: 8px; padding: 4px 8px; font-size: 11px; font-weight: 700; color: white; text-align: center; line-height: 1.4; }
 
   .day-type-btn { padding: 7px 10px; border: 2px solid var(--border); border-radius: 8px; font-size: 11px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; background: white; color: var(--text-muted); transition: all .12s; }
   .day-type-btn:hover { border-color: var(--accent); }
-  .day-type-btn.on-study     { background: var(--vocab-color);   color: white; border-color: transparent; }
-  .day-type-btn.on-cumreview { background: var(--cumreview);     color: white; border-color: transparent; }
-  .day-type-btn.on-rest      { background: var(--rest-color);    color: white; border-color: transparent; }
-  .day-type-btn.on-holiday   { background: var(--holiday-color); color: white; border-color: transparent; }
+  .day-type-btn.on-study    { background: #4a90d9; color: white; border-color: transparent; }
+  .day-type-btn.on-cumreview{ background: #17a2b8; color: white; border-color: transparent; }
+  .day-type-btn.on-rest     { background: var(--rest-color); color: white; border-color: transparent; }
+  .day-type-btn.on-holiday  { background: var(--holiday-color); color: white; border-color: transparent; }
+
   @media (max-width: 480px) {
     .day-cell { min-height: 68px; }
     .progress-card { min-width: 120px; }
@@ -189,8 +178,8 @@
 <body>
 
 <header>
-  <h1>영어 학습 <span>캘린더</span></h1>
-  <p>단어 · 문법 · 구문 통합 관리</p>
+  <h1>학습 <span>캘린더</span></h1>
+  <p id="headerSub"></p>
 </header>
 
 <div class="exam-banner" id="examBanner"></div>
@@ -202,13 +191,7 @@
 
 <div class="progress-cards" id="progressCards"></div>
 
-<div class="legend">
-  <div class="legend-item"><div class="legend-dot" style="background:var(--vocab-color)"></div>단어</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--grammar-color)"></div>문법</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--syntax-color)"></div>구문</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--holiday-color)"></div>공휴일</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--rest-color)"></div>휴일</div>
-</div>
+<div class="legend" id="legend"></div>
 
 <div class="calendar-view" id="calendarView">
   <div class="year-tabs" id="yearTabs"></div>
@@ -264,24 +247,17 @@ const STUDY_START = '2026-06-07';
 function renderExamBanner() {
   const el = document.getElementById('examBanner');
   el.innerHTML = '';
-  const today = new Date();
-  today.setHours(0,0,0,0);
+  const today = new Date(); today.setHours(0,0,0,0);
   const studyStart = parseDate(STUDY_START);
-
   EXAMS.forEach(exam => {
     const examDate = parseDate(exam.date);
-    const diffMs   = examDate - today;
-    const dday     = Math.ceil(diffMs / (1000*60*60*24));
+    const dday = Math.ceil((examDate - today) / (1000*60*60*24));
     const studyDay = Math.floor((today - studyStart) / (1000*60*60*24)) + 1;
-
     const ddayText = dday > 0 ? `D-${dday}` : dday === 0 ? 'D-Day' : `D+${Math.abs(dday)}`;
     const dateStr2 = `${exam.date.replace(/-/g,'.')} (${['일','월','화','수','목','금','토'][examDate.getDay()]})`;
-
     el.innerHTML += `
       <div class="exam-card ${exam.cls}">
-        <div class="exam-card-studyday">
-          📚 Study<br>Day ${studyDay > 0 ? studyDay : 1}
-        </div>
+        <div class="exam-card-studyday">📚 Study<br>Day ${studyDay > 0 ? studyDay : 1}</div>
         <div class="exam-card-label">${exam.label} 시험</div>
         <div class="exam-card-dday">${ddayText}<span> 일</span></div>
         <div class="exam-card-sub">${dateStr2}</div>
@@ -293,36 +269,12 @@ const DEFAULT_CONFIG = {
   calStart: '2026-06',
   calEnd:   '2027-06',
   subjects: [
-    {
-      id: 'vocab',
-      name: '단어',
-      color: '#4a90d9',
-      lightColor: '#eaf3fb',
-      enabled: true,
-      totalDays: 48,
-      startDate: '2026-06-07',
-      restDays: [5],
-    },
-    {
-      id: 'grammar',
-      name: '문법',
-      color: '#9b6dce',
-      lightColor: '#f3eefb',
-      enabled: false,
-      totalDays: 30,
-      startDate: '2026-08-05',
-      restDays: [5],
-    },
-    {
-      id: 'syntax',
-      name: '구문',
-      color: '#2aab7a',
-      lightColor: '#e8f8f2',
-      enabled: false,
-      totalDays: 30,
-      startDate: '2026-08-05',
-      restDays: [5],
-    },
+    { id: 'vocab',    name: '단어',   color: '#4a90d9', lightColor: '#eaf3fb', enabled: true,  totalDays: 48, startDate: '2026-06-07', restDays: [5] },
+    { id: 'grammar',  name: '문법',   color: '#9b6dce', lightColor: '#f3eefb', enabled: false, totalDays: 30, startDate: '2026-08-05', restDays: [5] },
+    { id: 'syntax',   name: '구문',   color: '#2aab7a', lightColor: '#e8f8f2', enabled: false, totalDays: 30, startDate: '2026-08-05', restDays: [5] },
+    { id: 'reading',  name: '독해',   color: '#e8922a', lightColor: '#fdf3e8', enabled: false, totalDays: 30, startDate: '2026-09-01', restDays: [5] },
+    { id: 'exam',     name: '기출풀이', color: '#17a2b8', lightColor: '#e3f7fa', enabled: false, totalDays: 30, startDate: '2026-10-01', restDays: [5] },
+    { id: 'admin',    name: '행정법', color: '#e84a5f', lightColor: '#fde8ea', enabled: false, totalDays: 30, startDate: '2026-10-01', restDays: [5] },
   ],
 };
 
@@ -341,9 +293,29 @@ const HOLIDAY_NAMES = {
   '2027-06-06':'현충일',
 };
 
+// 색상에서 연한 배경색 자동 생성 (white 85% + color 15%)
+function lightColorFrom(hex) {
+  if (!hex || hex[0] !== '#') return '#f5f5f5';
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  return `rgb(${Math.round(r*.18+255*.82)},${Math.round(g*.18+255*.82)},${Math.round(b*.18+255*.82)})`;
+}
+
+function generateId() {
+  return 'subj_' + Date.now().toString(36) + Math.random().toString(36).slice(2,5);
+}
+
 function loadConfig() {
   const saved = localStorage.getItem('eng_cal_config');
-  return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+  if (!saved) return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+  const parsed = JSON.parse(saved);
+  // 구버전 저장값에 새 과목이 없으면 DEFAULT_CONFIG에서 보충
+  const existingIds = new Set(parsed.subjects.map(s => s.id));
+  DEFAULT_CONFIG.subjects.forEach(ds => {
+    if (!existingIds.has(ds.id)) parsed.subjects.push(JSON.parse(JSON.stringify(ds)));
+  });
+  return parsed;
 }
 function saveConfig(cfg) { localStorage.setItem('eng_cal_config', JSON.stringify(cfg)); }
 
@@ -370,7 +342,6 @@ function addDays(d,n) { const r=new Date(d); r.setDate(r.getDate()+n); return r;
 function parseDate(s) { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
 function parseMonth(s) { const [y,m]=s.split('-').map(Number); return {y,m}; }
 
-// 날짜별 dayNums 배열을 반환 (여러 회차 지원)
 function buildSubjectSchedule(subj) {
   const ov = (overrides[subj.id] || {});
   const map = {};
@@ -385,31 +356,19 @@ function buildSubjectSchedule(subj) {
     const ds = dateStr(cur);
     const dow = cur.getDay();
     const userOv = ov[ds];
-
     const isHoliday = HOLIDAYS.has(ds);
     const isRestDay = subj.restDays.includes(dow);
     const isSkip = userOv ? userOv.skip : (isHoliday || isRestDay);
-
-    // 해당 날짜의 회차 수 (기본 1)
     const sessions = (!isSkip && userOv && userOv.sessions) ? userOv.sessions : 1;
 
     if (!isSkip && dayNum <= subj.totalDays) {
       const dayNums = [];
-      for (let i = 0; i < sessions && dayNum + i <= subj.totalDays; i++) {
-        dayNums.push(dayNum + i);
-      }
-      map[ds] = {
-        dayNums,
-        dayNum: dayNums[0],
-        skip: false,
-        done: userOv ? !!userOv.done : false,
-        modified: !!userOv,
-      };
+      for (let i = 0; i < sessions && dayNum + i <= subj.totalDays; i++) dayNums.push(dayNum + i);
+      map[ds] = { dayNums, dayNum: dayNums[0], skip: false, done: userOv ? !!userOv.done : false, modified: !!userOv };
       dayNum += dayNums.length;
     } else if (isSkip) {
       map[ds] = { dayNums: [], dayNum: null, skip: true, done: false, modified: !!userOv };
     }
-
     cur = addDays(cur, 1);
   }
   return map;
@@ -421,27 +380,33 @@ function buildAllSchedules() {
   return all;
 }
 
+function renderLegend() {
+  const el = document.getElementById('legend');
+  const enabled = config.subjects.filter(s => s.enabled);
+  el.innerHTML = enabled.map(s =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${s.color}"></div>${s.name}</div>`
+  ).join('') +
+  `<div class="legend-item"><div class="legend-dot" style="background:var(--holiday-color)"></div>공휴일</div>` +
+  `<div class="legend-item"><div class="legend-dot" style="background:var(--rest-color)"></div>휴일</div>`;
+
+  const sub = document.getElementById('headerSub');
+  sub.textContent = enabled.length ? enabled.map(s => s.name).join(' · ') + ' 통합 관리' : '과목을 설정해 주세요';
+}
+
 function renderProgressCards(allSchedules) {
   const el = document.getElementById('progressCards');
   el.innerHTML = '';
   config.subjects.filter(s => s.enabled).forEach(s => {
     const sched = allSchedules[s.id] || {};
-    // 완료된 회차 수 합산 (여러 회차 지원)
-    const done = Object.values(sched)
-      .filter(c => !c.skip && c.done)
+    const done = Object.values(sched).filter(c => !c.skip && c.done)
       .reduce((acc, c) => acc + (c.dayNums ? c.dayNums.length : 1), 0);
     const total = s.totalDays;
-    const pct   = Math.round(done / total * 100);
-
+    const pct = Math.round(done / total * 100);
     el.innerHTML += `
       <div class="progress-card">
-        <div class="card-label">
-          <div class="card-dot" style="background:${s.color}"></div>${s.name}
-        </div>
+        <div class="card-label"><div class="card-dot" style="background:${s.color}"></div>${s.name}</div>
         <div class="card-count">${done}<span> / ${total} day</span></div>
-        <div class="mini-bar-track">
-          <div class="mini-bar-fill" style="width:${pct}%;background:${s.color}"></div>
-        </div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pct}%;background:${s.color}"></div></div>
       </div>`;
   });
 }
@@ -475,6 +440,7 @@ function renderYearTabs(years) {
 
 function renderCalendar() {
   const allSchedules = buildAllSchedules();
+  renderLegend();
   renderProgressCards(allSchedules);
 
   const container = document.getElementById('monthsContainer');
@@ -521,7 +487,6 @@ function renderCalendar() {
       const dayTypes = dayOv ? (dayOv.types || []) : [];
       if (dayTypes.includes('rest'))      cell.classList.add('is-rest-day');
       if (dayTypes.includes('holiday'))   cell.classList.add('is-holiday-day');
-      if (dayTypes.includes('cumreview')) cell.classList.add('is-cumreview-day');
       if (!dayOv && HOLIDAYS.has(ds))     cell.classList.add('is-holiday-day');
 
       const numEl = document.createElement('div');
@@ -536,7 +501,11 @@ function renderCalendar() {
       const chips = document.createElement('div');
       chips.className = 'subject-chips';
 
-      const extraLabels = { cumreview: { text: '📋 누적복습', color: 'var(--cumreview)' }, rest: { text: '🛋️ 휴일', color: 'var(--rest-color)' }, holiday: { text: '🎌 공휴일', color: 'var(--holiday-color)' } };
+      const extraLabels = {
+        cumreview: { text: '📋 누적복습', color: '#17a2b8' },
+        rest:      { text: '🛋️ 휴일',    color: 'var(--rest-color)' },
+        holiday:   { text: '🎌 공휴일',  color: 'var(--holiday-color)' }
+      };
       dayTypes.filter(t => t !== 'study').forEach(t => {
         const info = extraLabels[t];
         if (!info) return;
@@ -556,13 +525,12 @@ function renderCalendar() {
         const info = allSchedules[s.id][ds];
         if (!info || info.skip) return;
         const chip = document.createElement('div');
-        chip.className = `subject-chip chip-${s.id}${info.done?' chip-done':''}`;
+        chip.className = `subject-chip${info.done?' chip-done':''}`;
         chip.style.background = s.lightColor;
         chip.style.color = s.color;
-        // 여러 회차인 경우 범위 표시 (예: 단어 5-6)
         const dayNums = info.dayNums || [info.dayNum];
         const dayNumText = dayNums.length > 1
-          ? `${dayNums[0]}-${dayNums[dayNums.length - 1]}`
+          ? `${dayNums[0]}-${dayNums[dayNums.length-1]}`
           : dayNums[0];
         chip.innerHTML = `${info.done?'✓':''} ${s.name} ${dayNumText}`;
         chips.appendChild(chip);
@@ -584,17 +552,15 @@ function renderCalendar() {
   });
 }
 
+// ── 모달 ──────────────────────────────────────────
 let modalDs = null;
 let modalState = {};
 let modalDayTypes = new Set();
-let modalCurrentSchedule = {};  // 현재 열린 날짜의 스케줄 정보
+let modalCurrentSchedule = {};
 
 function toggleDayType(type) {
-  if (modalDayTypes.has(type)) {
-    modalDayTypes.delete(type);
-  } else {
-    modalDayTypes.add(type);
-  }
+  if (modalDayTypes.has(type)) modalDayTypes.delete(type);
+  else modalDayTypes.add(type);
   refreshDayTypeBtns();
   document.getElementById('modalSubjects').style.display =
     modalDayTypes.has('study') || modalDayTypes.size === 0 ? 'block' : 'none';
@@ -603,54 +569,42 @@ function toggleDayType(type) {
 function refreshDayTypeBtns() {
   ['study','cumreview','rest','holiday'].forEach(t => {
     const btn = document.getElementById('dtype-'+t);
-    if (!btn) return;
-    btn.className = 'day-type-btn' + (modalDayTypes.has(t) ? ' on-'+t : '');
+    if (btn) btn.className = 'day-type-btn' + (modalDayTypes.has(t) ? ' on-'+t : '');
   });
 }
 
-// 회차 수 변경 핸들러
 function setSessions(subjId, n) {
   modalState[subjId].sessions = n;
   const subj = config.subjects.find(s => s.id === subjId);
   const info = modalCurrentSchedule[subjId];
-
-  // 회차 미리보기 텍스트 업데이트
   let previewText;
   if (!info || info.skip || modalState[subjId].skip) {
     previewText = '건너뜀';
   } else {
     const first = info.dayNums && info.dayNums.length > 0 ? info.dayNums[0] : info.dayNum;
-    if (first == null) {
-      previewText = '–';
-    } else {
+    if (first == null) { previewText = '–'; }
+    else {
       const last = Math.min(first + n - 1, subj.totalDays);
       previewText = n > 1 ? `${first}-${last}day` : `${first}day`;
     }
   }
   const previewEl = document.getElementById(`day-preview-${subjId}`);
   if (previewEl) previewEl.textContent = `(${previewText})`;
-
-  // 버튼 스타일 업데이트
-  [1, 2, 3].forEach(num => {
+  [1,2,3].forEach(num => {
     const btn = document.getElementById(`session-btn-${subjId}-${num}`);
     if (!btn) return;
-    const isActive = num === n;
-    btn.className = 'session-btn' + (isActive ? ' active' : '');
-    btn.style = isActive ? `background:${subj.color};color:white;border-color:transparent` : '';
+    btn.className = 'session-btn' + (num === n ? ' active' : '');
+    btn.style = num === n ? `background:${subj.color};color:white;border-color:transparent` : '';
   });
 }
 
 function openModal(ds, d, m, y, allSchedules) {
-  modalDs = ds;
-  modalState = {};
-  modalCurrentSchedule = {};
-
+  modalDs = ds; modalState = {}; modalCurrentSchedule = {};
   const existingTypes = (dayOverrides[ds] || {}).types || [];
   modalDayTypes = new Set(existingTypes.length ? existingTypes : ['study']);
   refreshDayTypeBtns();
   document.getElementById('modalSubjects').style.display =
     modalDayTypes.has('study') || modalDayTypes.size === 0 ? 'block' : 'none';
-
   document.getElementById('modalTitle').textContent = `${y}년 ${m}월 ${d}일`;
   document.getElementById('modalSub').textContent = HOLIDAYS.has(ds) ? `🎌 ${HOLIDAY_NAMES[ds]||'공휴일'}` : '';
 
@@ -659,31 +613,21 @@ function openModal(ds, d, m, y, allSchedules) {
 
   config.subjects.filter(s=>s.enabled).forEach(s => {
     const info = (allSchedules[s.id]||{})[ds];
-    const ov = (overrides[s.id]||{})[ds];
-
+    const ov   = (overrides[s.id]||{})[ds];
     modalCurrentSchedule[s.id] = info;
-
     const isSkip = info ? info.skip : true;
     const isDone = info ? info.done : false;
     const dayNums = info && !info.skip ? (info.dayNums || [info.dayNum]) : [];
     const sessions = dayNums.length > 0 ? dayNums.length : (ov && ov.sessions ? ov.sessions : 1);
-
     modalState[s.id] = { skip: isSkip, done: isDone, sessions };
 
-    // 회차 미리보기 텍스트
     let dayPreviewText;
-    if (isSkip) {
-      dayPreviewText = '건너뜀';
-    } else if (dayNums.length > 1) {
-      dayPreviewText = `${dayNums[0]}-${dayNums[dayNums.length-1]}day`;
-    } else if (dayNums.length === 1) {
-      dayPreviewText = `${dayNums[0]}day`;
-    } else {
-      dayPreviewText = '–';
-    }
+    if (isSkip) dayPreviewText = '건너뜀';
+    else if (dayNums.length > 1) dayPreviewText = `${dayNums[0]}-${dayNums[dayNums.length-1]}day`;
+    else if (dayNums.length === 1) dayPreviewText = `${dayNums[0]}day`;
+    else dayPreviewText = '–';
 
-    // 각 회차 버튼 스타일
-    const sessionBtns = [1, 2, 3].map(n => {
+    const sessionBtns = [1,2,3].map(n => {
       const isActive = n === sessions;
       const style = isActive ? `background:${s.color};color:white;border-color:transparent` : '';
       return `<button class="session-btn${isActive?' active':''}" id="session-btn-${s.id}-${n}" onclick="setSessions('${s.id}',${n})" style="${style}">${n}회차</button>`;
@@ -692,21 +636,13 @@ function openModal(ds, d, m, y, allSchedules) {
     const block = document.createElement('div');
     block.className = 'modal-subject-block';
     block.innerHTML = `
-      <div class="modal-subject-title" id="subject-title-${s.id}">
+      <div class="modal-subject-title">
         <div class="modal-subject-dot" style="background:${s.color}"></div>
         ${s.name} <span id="day-preview-${s.id}" style="font-size:11px;color:var(--text-muted);font-weight:400">(${dayPreviewText})</span>
       </div>
       <div class="status-btns">
-        <button class="status-btn ${!isSkip?'selected':''}"
-          onclick="setSubjSkip('${s.id}',false,this)"
-          style="${!isSkip?`background:${s.color};color:white;border-color:transparent`:''}">
-          📚 학습
-        </button>
-        <button class="status-btn ${isSkip?'selected':''}"
-          onclick="setSubjSkip('${s.id}',true,this)"
-          style="${isSkip?'background:var(--rest-color);color:white;border-color:transparent':''}">
-          🛋️ 건너뜀
-        </button>
+        <button class="status-btn ${!isSkip?'selected':''}" onclick="setSubjSkip('${s.id}',false,this)" style="${!isSkip?`background:${s.color};color:white;border-color:transparent`:''}">📚 학습</button>
+        <button class="status-btn ${isSkip?'selected':''}"  onclick="setSubjSkip('${s.id}',true,this)"  style="${isSkip?'background:var(--rest-color);color:white;border-color:transparent':''}">🛋️ 건너뜀</button>
       </div>
       <div class="sessions-row" id="sessions-row-${s.id}" style="display:${!isSkip?'flex':'none'}">
         <span class="sessions-label">회차 수</span>
@@ -718,7 +654,6 @@ function openModal(ds, d, m, y, allSchedules) {
       </div>`;
     container.appendChild(block);
   });
-
   document.getElementById('modalOverlay').classList.add('open');
 }
 
@@ -733,22 +668,14 @@ function setSubjSkip(subjId, skip, btn) {
   else        { btns[1].classList.add('selected'); btns[1].style='background:var(--rest-color);color:white;border-color:transparent'; }
   document.getElementById(`done-row-${subjId}`).style.display = skip ? 'none' : 'flex';
   document.getElementById(`sessions-row-${subjId}`).style.display = skip ? 'none' : 'flex';
-
-  // 건너뜀으로 바꾸면 미리보기도 업데이트
   const previewEl = document.getElementById(`day-preview-${subjId}`);
   if (previewEl) {
-    if (skip) {
-      previewEl.textContent = '(건너뜀)';
-    } else {
-      // 현재 sessions 기준으로 다시 계산
-      setSessions(subjId, modalState[subjId].sessions || 1);
-    }
+    if (skip) previewEl.textContent = '(건너뜀)';
+    else setSessions(subjId, modalState[subjId].sessions || 1);
   }
 }
 
-function setSubjDone(subjId, done) {
-  modalState[subjId].done = done;
-}
+function setSubjDone(subjId, done) { modalState[subjId].done = done; }
 
 function saveModal() {
   if (!modalDs) { closeModal(); return; }
@@ -764,11 +691,7 @@ function saveModal() {
       const st = modalState[s.id];
       if (!st) return;
       if (!overrides[s.id]) overrides[s.id] = {};
-      overrides[s.id][modalDs] = {
-        skip: st.skip,
-        done: st.done,
-        sessions: st.skip ? 1 : (st.sessions || 1),
-      };
+      overrides[s.id][modalDs] = { skip: st.skip, done: st.done, sessions: st.skip ? 1 : (st.sessions || 1) };
     });
   }
   saveOverrides(overrides);
@@ -784,43 +707,97 @@ document.getElementById('modalOverlay').addEventListener('click', e => {
   if (e.target===document.getElementById('modalOverlay')) closeModal();
 });
 
+// ── 설정 (과목 자유 편집) ──────────────────────────
+let tempSubjects = [];
+
+function syncTempSubjectsFromDOM() {
+  tempSubjects.forEach((s, i) => {
+    const nameEl    = document.getElementById(`s-name-${i}`);
+    const colorEl   = document.getElementById(`s-color-${i}`);
+    const enabledEl = document.getElementById(`s-enabled-${i}`);
+    const totalEl   = document.getElementById(`s-total-${i}`);
+    const startEl   = document.getElementById(`s-start-${i}`);
+    if (nameEl)    s.name     = nameEl.value.trim() || s.name;
+    if (colorEl)   { s.color = colorEl.value; s.lightColor = lightColorFrom(colorEl.value); }
+    if (enabledEl) s.enabled  = enabledEl.checked;
+    if (totalEl)   s.totalDays = parseInt(totalEl.value) || s.totalDays;
+    if (startEl)   s.startDate = startEl.value || s.startDate;
+  });
+}
+
+function addSubject() {
+  syncTempSubjectsFromDOM();
+  const colors = ['#e8922a','#17a2b8','#e84a5f','#f5a623','#50c878','#ff69b4','#8b5e3c'];
+  const usedColors = new Set(tempSubjects.map(s => s.color));
+  const newColor = colors.find(c => !usedColors.has(c)) || '#888888';
+  tempSubjects.push({
+    id: generateId(),
+    name: '새 과목',
+    color: newColor,
+    lightColor: lightColorFrom(newColor),
+    enabled: true,
+    totalDays: 30,
+    startDate: new Date().toISOString().slice(0,10),
+    restDays: [5],
+  });
+  renderSettingsForm();
+  // 새 과목 이름 입력창에 포커스
+  const lastIdx = tempSubjects.length - 1;
+  const nameInput = document.getElementById(`s-name-${lastIdx}`);
+  if (nameInput) { nameInput.select(); nameInput.focus(); }
+}
+
+function deleteSubject(index) {
+  if (tempSubjects.length <= 1) { alert('과목이 최소 1개는 있어야 해요.'); return; }
+  syncTempSubjectsFromDOM();
+  tempSubjects.splice(index, 1);
+  renderSettingsForm();
+}
+
 function renderSettingsForm() {
+  if (tempSubjects.length === 0) tempSubjects = JSON.parse(JSON.stringify(config.subjects));
   document.getElementById('cfg-calStart').value = config.calStart;
   document.getElementById('cfg-calEnd').value   = config.calEnd;
 
   const el = document.getElementById('subject-settings');
   el.innerHTML = '<h3>📚 과목 설정</h3>';
 
-  config.subjects.forEach((s,i) => {
-    el.innerHTML += `
-      <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:4px">
-        <div class="subject-header">
-          <div class="subject-dot" style="background:${s.color}"></div>
-          <strong>${s.name}</strong>
-        </div>
-        <label class="subject-toggle">
+  tempSubjects.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'subject-card';
+    card.innerHTML = `
+      <div class="subject-card-header">
+        <input type="color" id="s-color-${i}" value="${s.color}" title="색상 변경">
+        <input type="text"  id="s-name-${i}"  value="${s.name}" placeholder="과목 이름">
+        <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-muted);margin-left:auto;white-space:nowrap">
           <input type="checkbox" id="s-enabled-${i}" ${s.enabled?'checked':''}> 활성화
         </label>
-        <div class="settings-row">
-          <label>총 회차</label>
-          <input type="number" id="s-total-${i}" value="${s.totalDays}" min="1" max="200">
-        </div>
-        <div class="settings-row">
-          <label>시작일</label>
-          <input type="date" id="s-start-${i}" value="${s.startDate}">
-        </div>
+        <button class="btn-delete" onclick="deleteSubject(${i})">삭제</button>
+      </div>
+      <div class="subject-card-row">
+        <label>총 회차</label>
+        <input type="number" id="s-total-${i}" value="${s.totalDays}" min="1" max="500">
+      </div>
+      <div class="subject-card-row">
+        <label>시작일</label>
+        <input type="date" id="s-start-${i}" value="${s.startDate}">
       </div>`;
+    el.appendChild(card);
   });
+
+  const addBtn = document.createElement('button');
+  addBtn.className = 'btn-add-subject';
+  addBtn.textContent = '+ 새 과목 추가';
+  addBtn.onclick = addSubject;
+  el.appendChild(addBtn);
 }
 
 function saveSettings() {
-  config.calStart = document.getElementById('cfg-calStart').value;
-  config.calEnd   = document.getElementById('cfg-calEnd').value;
-  config.subjects.forEach((s,i) => {
-    s.enabled   = document.getElementById(`s-enabled-${i}`).checked;
-    s.totalDays = parseInt(document.getElementById(`s-total-${i}`).value) || s.totalDays;
-    s.startDate = document.getElementById(`s-start-${i}`).value || s.startDate;
-  });
+  syncTempSubjectsFromDOM();
+  config.calStart  = document.getElementById('cfg-calStart').value;
+  config.calEnd    = document.getElementById('cfg-calEnd').value;
+  config.subjects  = tempSubjects.map(s => ({ ...s }));
+  tempSubjects = [];
   saveConfig(config);
   showView('calendar');
 }
@@ -832,10 +809,9 @@ function showView(v) {
   document.getElementById('calendarView').classList.toggle('hidden', v!=='calendar');
   document.getElementById('settingsView').classList.toggle('active', v==='settings');
   document.getElementById('progressCards').style.display = v==='calendar'?'flex':'none';
-  document.querySelector('.legend').style.display = v==='calendar'?'flex':'none';
+  document.getElementById('legend').style.display = v==='calendar'?'flex':'none';
   document.getElementById('yearTabs').style.display = v==='calendar'?'flex':'none';
-
-  if (v==='settings') renderSettingsForm();
+  if (v==='settings') { tempSubjects = []; renderSettingsForm(); }
   if (v==='calendar') renderCalendar();
 }
 
